@@ -22,4 +22,5 @@ class CloudinaryModel:
         for i,item in enumerate(result.get("resources",[])):
             print("hello i am inside the loop and see this baby")
             url = item["secure_url"]
-            return {"url" : url}
+            print(url)
+            return url
