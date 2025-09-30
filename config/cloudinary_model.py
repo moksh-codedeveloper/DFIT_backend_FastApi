@@ -1,5 +1,8 @@
+import numpy as np
 import cloudinary
-import os 
+from io import BytesIO
+import os, requests
+from PIL import Image 
 from dotenv import load_dotenv
 load_dotenv()
 from cloudinary.api import resources
@@ -24,3 +27,21 @@ class CloudinaryModel:
             url = item["secure_url"]
             print(url)
             return url
+        
+class ImageNumpyArrayExtracter:
+    def __init__(self, url):
+        self.url = url
+        self.img_arr = np.array([])
+    
+    def image_numpy_extractor(self):
+        try:
+            result = requests.get(self.url, stream=True)
+            resp = Image.open(BytesIO(result.content))
+            self.img_arr = np.array(resp)
+            return {
+                "message" : "Your array has been extracted here it is",
+                "shape" : self.img_arr.shape,
+                "dtype" : self.img_arr.dtype
+            }
+        except:
+          print('An exception occurred in the server due to the network or the url is not proper')
